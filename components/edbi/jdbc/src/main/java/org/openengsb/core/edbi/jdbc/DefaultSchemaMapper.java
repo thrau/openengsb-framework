@@ -83,22 +83,40 @@ public class DefaultSchemaMapper implements SchemaMapper {
     @Override
     public void execute(InsertOperation operation) {
         LOG.debug("Executing InsertOpration");
+
+        long then = System.currentTimeMillis();
         headTableEngine.execute(operation);
+        Result.result().currentRun().logHead(then);
+
+        then = System.currentTimeMillis();
         historyTableEngine.execute(operation);
+        Result.result().currentRun().logHistory(then);
     }
 
     @Override
     public void execute(UpdateOperation operation) {
         LOG.debug("Executing UpdateOperation");
+
+        long then = System.currentTimeMillis();
         headTableEngine.execute(operation);
+        Result.result().currentRun().logHead(then);
+
+        then = System.currentTimeMillis();
         historyTableEngine.execute(operation);
+        Result.result().currentRun().logHistory(then);
     }
 
     @Override
     public void execute(DeleteOperation operation) {
         LOG.debug("Executing DeleteOperation");
+
+        long then = System.currentTimeMillis();
         headTableEngine.execute(operation);
+        Result.result().currentRun().logHead(then);
+
+        then = System.currentTimeMillis();
         historyTableEngine.execute(operation);
+        Result.result().currentRun().logHistory(then);
     }
 
 }

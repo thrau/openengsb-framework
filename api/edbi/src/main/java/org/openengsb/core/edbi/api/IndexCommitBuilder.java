@@ -17,6 +17,7 @@
 package org.openengsb.core.edbi.api;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -169,6 +170,13 @@ public class IndexCommitBuilder {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> IndexCommitBuilder insert(Collection<T> collection, Class<T> clazz) {
+        updateModelClassSet(clazz);
+        ((List) getInsertList(clazz)).addAll(collection);
+        return this;
+    }
+
     /**
      * Marks the given object for updating in the commit.
      * 
@@ -178,6 +186,13 @@ public class IndexCommitBuilder {
     public IndexCommitBuilder update(Object object) {
         updateModelClassSet(object);
         getUpdateList(object.getClass()).add((OpenEngSBModel) object);
+        return this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> IndexCommitBuilder update(Collection<T> collection, Class<T> clazz) {
+        updateModelClassSet(clazz);
+        ((List) getUpdateList(clazz)).addAll(collection);
         return this;
     }
 
@@ -193,6 +208,13 @@ public class IndexCommitBuilder {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> IndexCommitBuilder delete(Collection<T> collection, Class<T> clazz) {
+        updateModelClassSet(clazz);
+        ((List) getDeleteList(clazz)).addAll(collection);
+        return this;
+    }
+
     /**
      * Returns the IndexCommit being built.
      * 
@@ -203,7 +225,11 @@ public class IndexCommitBuilder {
     }
 
     protected void updateModelClassSet(Object object) {
-        commit.getModelClasses().add(object.getClass());
+        updateModelClassSet(object.getClass());
+    }
+
+    protected void updateModelClassSet(Class<?> clazz) {
+        commit.getModelClasses().add(clazz);
     }
 
     protected List<OpenEngSBModel> getInsertList(Class<?> clazz) {

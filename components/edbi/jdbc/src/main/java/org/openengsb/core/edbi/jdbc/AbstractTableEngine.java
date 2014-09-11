@@ -137,7 +137,13 @@ public abstract class AbstractTableEngine extends JdbcService implements TableEn
     protected void execute(InsertOperation operation, IndexRecordCallback callback) {
         Table table = get(operation.getIndex());
 
-        insert(table, collectRecords(operation, callback));
+        long then = System.currentTimeMillis();
+        List<IndexRecord> indexRecords = collectRecords(operation, callback);
+        //System.out.printf("\tcollecting took %d ms\n", (System.currentTimeMillis() - then));
+
+        then = System.currentTimeMillis();
+        insert(table, indexRecords);
+        //System.out.printf("\tinserting took %d ms\n", (System.currentTimeMillis() - then));
     }
 
     protected void execute(UpdateOperation operation, IndexRecordCallback callback) {
